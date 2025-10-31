@@ -45,7 +45,14 @@ public class UserRoutes {
 
             // POST /users - Create new user
             post("", userController::createUser);
+            // PUT /users/:id - Update user
+            put("/:id", userController::updateUser);
 
+            // DELETE /users/:id - Delete user
+            delete("/:id", userController::deleteUser);
+
+            // OPTIONS /users/:id - Check if user exists
+            options("/:id", userController::checkUserExists);
         });
 
         after("/*", (request, response) -> response.type("application/json"));
