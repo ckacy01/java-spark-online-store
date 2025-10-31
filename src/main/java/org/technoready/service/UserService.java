@@ -1,6 +1,7 @@
 package org.technoready.service;
 
 import org.technoready.dto.request.CreateUserRequest;
+import org.technoready.dto.request.UpdateUserRequest;
 import org.technoready.entity.User;
 
 import java.util.List;
@@ -26,4 +27,18 @@ public interface UserService {
      * Retrieve an user by id
      */
     Optional<User> getUserById(Long id);
+    /**
+     * Update an existing user
+     */
+    User updateUser(Long id, UpdateUserRequest request);
+
+    /**
+     * Delete a user
+     */
+    boolean deleteUser(Long id);
+
+    /**
+     * Check if user exists
+     */
+    boolean userExists(Long id);
 }
