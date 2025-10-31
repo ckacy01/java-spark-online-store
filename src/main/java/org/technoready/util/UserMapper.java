@@ -3,6 +3,7 @@ package org.technoready.util;
 
 
 import org.technoready.dto.request.CreateUserRequest;
+import org.technoready.dto.request.UpdateUserRequest;
 import org.technoready.dto.response.UserResponse;
 import org.technoready.entity.User;
 
@@ -53,4 +54,20 @@ public class UserMapper {
                 .map(UserMapper::toResponse)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Update existing User entity with UpdateUserRequest data
+     */
+    public static User updateEntity(User user, UpdateUserRequest request) {
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.getFullName() != null && !request.getFullName().trim().isEmpty()) {
+            user.setFullName(request.getFullName());
+        }
+        user.setUpdatedAt(LocalDateTime.now());
+        return user;
+    }
+
+
 }
