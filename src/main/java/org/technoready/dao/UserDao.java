@@ -28,6 +28,16 @@ public interface UserDao {
     @SqlQuery("SELECT * FROM users WHERE id = :id")
     Optional<User> findById(@Bind("id") Long id);
 
+    @SqlUpdate("UPDATE users SET email = :email, full_name = :fullName, updated_at = :updatedAt " +
+            "WHERE id = :id")
+    int update(@BindBean User user);
+
+    @SqlUpdate("DELETE FROM users WHERE id = :id")
+    int delete(@Bind("id") Long id);
+
+    @SqlQuery("SELECT EXISTS(SELECT 1 FROM users WHERE id = :id)")
+    boolean exists(@Bind("id") Long id);
+
 }
 
 
