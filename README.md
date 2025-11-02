@@ -66,36 +66,23 @@ java-spark-online-store/
 │   │   │   └── GsonConfig.java     # JSON serialization config
 │   │   │
 │   │   ├── controller/             # HTTP request handlers
-│   │   │   └── UserController.java # User endpoint logic
-│   │   │
+│   │   │ 
 │   │   ├── dao/                    # Data Access Objects
-│   │   │   └── UserDao.java        # JDBI interface for DB operations
 │   │   │
 │   │   ├── dto/                    # Data Transfer Objects
 │   │   │   ├── request/            # API request models
-│   │   │   │   ├── CreateUserRequest.java
-│   │   │   │   └── UpdateUserRequest.java
 │   │   │   └── response/           # API response models
-│   │   │       ├── UserResponse.java
-│   │   │       ├── ApiResponse.java
-│   │   │       └── ErrorResponse.java
 │   │   │
 │   │   ├── entity/                 # Domain models
-│   │   │   └── User.java           # User entity (database model)
 │   │   │
 │   │   ├── exception/              # Custom exceptions (future)
 │   │   │
 │   │   ├── routes/                 # Route configuration
-│   │   │   └── UserRoutes.java     # User endpoint definitions
 │   │   │
 │   │   ├── service/                # Business logic layer
-│   │   │   ├── UserService.java    # Service interface
 │   │   │   └── impl/
-│   │   │       └── UserServiceImpl.java
 │   │   │
 │   │   ├── util/                   # Utility classes
-│   │   │   ├── UserMapper.java     # DTO ↔ Entity mapping
-│   │   │   └── LocalDateTimeAdapter.java # Gson adapter
 │   │   │
 │   │   ├── web/                    # Web sockets (future)
 │   │   │
