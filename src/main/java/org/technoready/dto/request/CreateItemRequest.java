@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 /**
  * Create Item Request DTO
  * Data Transfer Object for items creation
@@ -18,7 +20,8 @@ import lombok.NoArgsConstructor;
 public class CreateItemRequest {
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
+    private boolean available;
 
     public void validate() {
         if (name == null || name.isEmpty()) {
@@ -27,7 +30,7 @@ public class CreateItemRequest {
         if (description == null || description.isEmpty()) {
             throw new IllegalArgumentException("Description cannot be empty");
         }
-        if (price <= 0) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
     }
