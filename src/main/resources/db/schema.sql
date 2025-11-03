@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS items (
     price DECIMAL(10,2) NOT NULL,
     current_price DECIMAL(10,2) NOT NULL, -- Current bidding price
     original_price DECIMAL(10,2) NOT NULL, -- Original listing price
-    is_available BOOLEAN NOT NULL DEFAULT TRUE,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
@@ -42,7 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at);
 CREATE INDEX IF NOT EXISTS idx_items_name ON items(name);
 CREATE INDEX IF NOT EXISTS idx_items_price ON items(price);
 CREATE INDEX IF NOT EXISTS idx_items_current_price ON items(current_price);
-CREATE INDEX IF NOT EXISTS idx_items_is_available ON items(is_available);
+CREATE INDEX IF NOT EXISTS idx_items_available ON items(available);
 CREATE INDEX IF NOT EXISTS idx_items_created_at ON items(created_at);
 CREATE INDEX IF NOT EXISTS idx_offers_item_id ON offers(item_id);
 CREATE INDEX IF NOT EXISTS idx_offers_user_id ON offers(user_id);
@@ -68,7 +68,7 @@ END IF;
 
     -- Insert items
     IF NOT EXISTS (SELECT 1 FROM items) THEN
-        INSERT INTO items (name, description, price, current_price, original_price, is_available, created_at, updated_at) VALUES
+        INSERT INTO items (name, description, price, current_price, original_price, available, created_at, updated_at) VALUES
             ('Gorra autografiada por Peso Pluma', 'Una gorra autografiada por el famoso Peso Pluma.', 621.34, 621.34, 621.34, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
             ('Casco autografiado por Rosalía', 'Un casco autografiado por la famosa cantante Rosalía, una verdadera MOTOMAMI!', 734.57, 734.57, 734.57, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
             ('Chamarra de Bad Bunny', 'Una chamarra de la marca favorita de Bad Bunny, autografiada por el propio artista.', 521.89, 521.89, 521.89, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -94,4 +94,4 @@ COMMENT ON TABLE offers IS 'Stores user offers/bids for collectible items';
 COMMENT ON COLUMN offers.status IS 'Offer status: PENDING, ACCEPTED, REJECTED, OUTBID';
 COMMENT ON COLUMN items.current_price IS 'Current highest offer price or original price';
 COMMENT ON COLUMN items.original_price IS 'Initial listing price';
-COMMENT ON COLUMN items.is_available IS 'Whether item is still available for offers';
+COMMENT ON COLUMN items.available IS 'Whether item is still available for offers';
