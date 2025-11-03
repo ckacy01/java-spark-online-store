@@ -7,6 +7,8 @@ import org.technoready.dao.UserDao;
 import org.technoready.dto.request.CreateUserRequest;
 import org.technoready.dto.request.UpdateUserRequest;
 import org.technoready.entity.User;
+import org.technoready.exception.ConflictException;
+import org.technoready.exception.NotFoundException;
 import org.technoready.service.UserService;
 import org.technoready.util.UserMapper;
 
@@ -33,18 +35,15 @@ public class UserServiceImpl implements UserService {
     public User createUser(CreateUserRequest request) {
         log.info("Creating new user with username: {}", request.getUsername());
 
-        // Validate request
         request.validate();
 
-        // Check if username already exists
         Optional<User> existingUser = jdbi.withExtension(UserDao.class,
                 dao -> dao.findByUsername(request.getUsername()));
 
         if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("Username already exists: " + request.getUsername());
+            throw new ConflictException("Username already exists: " + request.getUsername());
         }
 
-        // Map and insert
         User user = UserMapper.toEntity(request);
         long generatedId = jdbi
                 .withExtension(UserDao.class, dao -> dao.insert(user));
@@ -64,14 +63,12 @@ public class UserServiceImpl implements UserService {
     public User updateUser(Long id, UpdateUserRequest request) {
         log.info("Updating user with id: {}", id);
 
-        // Validate request
+
         request.validate();
 
-        // Find existing user
         User user = getUserById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
-        // Update user
         User updatedUser = UserMapper.updateEntity(user, request);
         jdbi.useExtension(UserDao.class, dao -> dao.update(updatedUser));
 
@@ -85,13 +82,12 @@ public class UserServiceImpl implements UserService {
 
         int rowsAffected = jdbi.withExtension(UserDao.class, dao -> dao.delete(id));
 
-        if (rowsAffected > 0) {
-            log.info("User deleted successfully with id: {}", id);
-            return true;
+        if (rowsAffected == 0) {
+            throw new NotFoundException("User not found with id: " + id);
         }
 
-        log.warn("No user found to delete with id: {}", id);
-        return false;
+        log.warn("User deleted successfully with id: {}", id);
+        return true;
     }
 
     @Override
