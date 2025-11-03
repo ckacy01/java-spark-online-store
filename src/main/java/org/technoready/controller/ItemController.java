@@ -9,6 +9,8 @@ import org.technoready.dto.request.UpdateItemRequest;
 import org.technoready.dto.response.ApiResponse;
 import org.technoready.dto.response.ItemResponse;
 import org.technoready.entity.Item;
+import org.technoready.exception.BadRequestException;
+import org.technoready.exception.NotFoundException;
 import org.technoready.service.ItemService;
 import org.technoready.util.ItemMapper;
 import spark.Request;
@@ -35,185 +37,85 @@ public class ItemController {
 
     public String getAllItems(Request request, Response response) {
         log.info("GET /items - Fetching all items");
-
-        try{
-            List<Item> items = itemService.getAllItems();
-            List<ItemResponse> itemResponses = ItemMapper.toResponseList(items);
-
-            response.status(200);
-            return gson.toJson(ApiResponse.success(itemResponses));
-        }catch(Exception e){
-            log.error("Error while fetching all items", e);
-            response.status(500);
-            return gson.toJson(ApiResponse.error("Failed to get items:" + e.getMessage()));
-        }
+        List<Item> items = itemService.getAllItems();
+        List<ItemResponse> itemResponses = ItemMapper.toResponseList(items);
+        response.status(200);
+        return gson.toJson(ApiResponse.success(itemResponses));
     }
 
     public String getAllAvailableItems(Request request, Response response) {
         log.info("GET /items/availability - Fetching all items");
-        try{
-            List<Item> items = itemService.getAllAvailableItems();
-            List<ItemResponse> itemResponses = ItemMapper.toResponseList(items);
-            response.status(200);
-            return gson.toJson(ApiResponse.success(itemResponses));
-        }catch(Exception e){
-            log.error("Error while fetching all items", e);
-            response.status(500);
-            return gson.toJson(ApiResponse.error("Failed to get items:" + e.getMessage()));
-        }
+        List<Item> items = itemService.getAllAvailableItems();
+        List<ItemResponse> itemResponses = ItemMapper.toResponseList(items);
+        response.status(200);
+        return gson.toJson(ApiResponse.success(itemResponses));
     }
 
     public String getItemById(Request request, Response response) {
-        String idParam =  request.params(":id");
-        log.info("GET /items/" + idParam);
+        Long id = Long.parseLong(request.params(":id"));
+        log.info("GET /items/" + id);
 
-        try{
-            Long id = Long.parseLong(idParam);
-            Optional<Item> item = itemService.getItemById(id);
-            if(item.isPresent()) {
-                ItemResponse itemResponse = ItemMapper.toResponse(item.get());
-                response.status(200);
-                return gson.toJson(ApiResponse.success("Item Found!",itemResponse));
-            }else{
-                response.status(400);
-                return gson.toJson(ApiResponse.error("Failed to get item by id:" + id));
-            }
-        }catch(NumberFormatException e){
-                log.error("Error while fetching item by id: " + idParam, e);
-                response.status(400);
-                return gson.toJson(ApiResponse.error("Failed to parse id:" + idParam));
-        }catch(Exception e){
-            log.error("Error while fetching item by id: " + idParam, e);
-            response.status(500);
-            return gson.toJson(ApiResponse.error("Failed to get item by id:" + idParam));
-        }
+        Item item = itemService.getItemById(id)
+                .orElseThrow(() -> new org.technoready.exception.NotFoundException("Item not found with id: " + id));
+        response.status(200);
+        return gson.toJson(ApiResponse.success(ItemMapper.toResponse(item)));
+
     }
 
     public String createItem(Request request, Response response) {
         log.info("POST /items");
-        try{
-            CreateItemRequest createItemRequest = gson.fromJson(request.body(), CreateItemRequest.class);
+        CreateItemRequest body = gson.fromJson(request.body(), CreateItemRequest.class);
+        if (body == null) throw new BadRequestException("Invalid request body");
 
-            if(createItemRequest == null) {
-                response.status(400);
-                return gson.toJson(ApiResponse.error("Request body is invalid"));
-            }
-
-            Item item = itemService.createItem(createItemRequest);
-            ItemResponse itemResponse = ItemMapper.toResponse(item);
-            response.status(201);
-            return gson.toJson(ApiResponse.success("Item Created!",itemResponse));
-        }catch(IllegalArgumentException e){
-            log.error("Error while creating item: " + e.getMessage(), e);
-            response.status(400);
-            return gson.toJson(ApiResponse.error(e.getMessage()));
-        }catch(Exception e){
-            log.error("Error while creating item: " + e.getMessage(), e);
-            response.status(500);
-            return gson.toJson(ApiResponse.error("Failed to create item: " + e.getMessage()));
-        }
+        Item item = itemService.createItem(body);
+        response.status(201);
+        return gson.toJson(ApiResponse.success("Item created successfully", ItemMapper.toResponse(item)));
     }
 
     public String updateItem(Request request, Response response) {
-        String idParam = request.params(":id");
-        log.info("PUT /items/" + idParam);
-        try {
-            Long id = Long.parseLong(idParam);
-            UpdateItemRequest updateItemRequest = gson.fromJson(request.body(), UpdateItemRequest.class);
+        Long id = Long.parseLong(request.params(":id"));
+        log.info("PUT /items/" + id);
 
-            if (updateItemRequest == null) {
-                response.status(400);
-                return gson.toJson(ApiResponse.error("Request body is invalid"));
-            }
-            Item item = itemService.updateItem(id, updateItemRequest);
-            ItemResponse itemResponse = ItemMapper.toResponse(item);
-            response.status(200);
-            return gson.toJson(ApiResponse.success("Item Updated!", itemResponse));
-        } catch (NumberFormatException e) {
-            log.error("Error while updating item: " + e.getMessage(), e);
-            response.status(400);
-            return gson.toJson(ApiResponse.error("Failed to parse id:" + idParam));
-        }catch (IllegalArgumentException e){
-            log.error("Error while updating item: " + e.getMessage(), e);
-            response.status(400);
-            return gson.toJson(ApiResponse.error("Failed to parse id:" + idParam));
-        }catch(Exception e){
-            log.error("Error while updating item: " + e.getMessage(), e);
-            response.status(500);
-            return gson.toJson(ApiResponse.error("Failed to create item: " + e.getMessage()));
-        }
+        UpdateItemRequest body = gson.fromJson(request.body(), UpdateItemRequest.class);
+        if (body == null) throw new BadRequestException("Invalid request body");
+
+        Item item = itemService.updateItem(id, body);
+        response.status(200);
+        return gson.toJson(ApiResponse.success("Item updated successfully", ItemMapper.toResponse(item)));
     }
 
     public String deleteItem(Request request, Response response) {
-        String idParam = request.params(":id");
-        log.info("DELETE /items/" + idParam);
-        try {
-            Long id = Long.parseLong(idParam);
-            boolean isDeleted = itemService.deleteItem(id);
-            if(isDeleted) {
-                response.status(200);
-                return gson.toJson(ApiResponse.success("Item Deleted!"));
-            }else{
-                response.status(400);
-                return gson.toJson(ApiResponse.error("Failed to delete item by id:" + id));
-            }
-        }catch(NumberFormatException e){
-            log.error("Error while deleting item: " + e.getMessage(), e);
-            response.status(400);
-            return gson.toJson(ApiResponse.error("Failed to parse id:" + idParam));
-        }catch(Exception e){
-            log.error("Error while deleting item: " + e.getMessage(), e);
-            response.status(500);
-            return gson.toJson(ApiResponse.error("Failed to delete item: " + e.getMessage()));
-        }
+        Long id = Long.parseLong(request.params(":id"));
+        log.info("DELETE /items/" + id);
+
+        itemService.deleteItem(id);
+        response.status(200);
+        return gson.toJson(ApiResponse.success("Item deleted successfully"));
     }
 
     public String getItemByName(Request request, Response response) {
         String nameParam = request.queryParams("name");
         log.info("GET /items/search" + nameParam);
-        try{
-            Optional<Item> item = itemService.getItemByName(nameParam);
 
-            if(item.isPresent()) {
-                ItemResponse itemResponse = ItemMapper.toResponse(item.get());
-                response.status(200);
-                return gson.toJson(ApiResponse.success("Item Found!", itemResponse));
-            }else{
-                response.status(400);
-                return gson.toJson(ApiResponse.error("Failed to get item by name: " + nameParam));
-            }
-        }catch(IllegalArgumentException e){
-            log.error("Error while getting item by name: " + e.getMessage(), e);
-            response.status(400);
-            return gson.toJson(ApiResponse.error("Failed to parse name: " + nameParam));
-        }catch(Exception e){
-            log.error("Error while getting item by name: " + e.getMessage(), e);
-            response.status(500);
-            return gson.toJson(ApiResponse.error("Failed to get item by name: " + e.getMessage()));
+        Optional<Item> item = itemService.getItemByName(nameParam);
+
+        if(item.isPresent()) {
+            ItemResponse itemResponse = ItemMapper.toResponse(item.get());
+            response.status(200);
+            return gson.toJson(ApiResponse.success("Item Found!", itemResponse));
+        }else{
+            throw new NotFoundException("Item not found with name: " + nameParam);
         }
+
     }
 
     public String updateAvailability(Request request, Response response) {
-        String idParam = request.params(":id");
-        String availableParam = request.queryParams("available");
-        log.info("PATCH /items/{}/availability?available={}", idParam, availableParam);
-
-        try {
-            Long id = Long.parseLong(idParam);
-            Boolean available = Boolean.parseBoolean(availableParam);
-
-            if(!itemService.itemExists(id)){
-                response.status(400);
-                return gson.toJson(ApiResponse.error("Item not found!"));
-            }
-
-            itemService.updateItemAvailability(id, available);
-            response.status(200);
-            return gson.toJson(ApiResponse.success("Item availability updated to " + available, "id:" + id));
-        } catch (Exception e) {
-            response.status(400);
-            return gson.toJson(ApiResponse.error("Failed to update availability: " + e.getMessage()));
-        }
+        Long id = Long.parseLong(request.params(":id"));
+        Boolean available = Boolean.parseBoolean(request.queryParams("available"));
+        log.info("PATCH /items/{}/availability?available={}", id, available);
+        itemService.updateItemAvailability(id, available);
+        response.status(200);
+        return gson.toJson(ApiResponse.success("Availability updated to " + available));
     }
 
 
