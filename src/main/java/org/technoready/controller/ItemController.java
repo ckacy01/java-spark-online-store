@@ -154,5 +154,30 @@ public class ItemController {
         }
     }
 
+    public String getItemByName(Request request, Response response) {
+        String nameParam = request.queryParams("name");
+        log.info("GET /items/search" + nameParam);
+        try{
+            Optional<Item> item = itemService.getItemByName(nameParam);
+
+            if(item.isPresent()) {
+                ItemResponse itemResponse = ItemMapper.toResponse(item.get());
+                response.status(200);
+                return gson.toJson(ApiResponse.success("Item Found!", itemResponse));
+            }else{
+                response.status(400);
+                return gson.toJson(ApiResponse.error("Failed to get item by name: " + nameParam));
+            }
+        }catch(IllegalArgumentException e){
+            log.error("Error while getting item by name: " + e.getMessage(), e);
+            response.status(400);
+            return gson.toJson(ApiResponse.error("Failed to parse name: " + nameParam));
+        }catch(Exception e){
+            log.error("Error while getting item by name: " + e.getMessage(), e);
+            response.status(500);
+            return gson.toJson(ApiResponse.error("Failed to get item by name: " + e.getMessage()));
+        }
+    }
+
 
 }

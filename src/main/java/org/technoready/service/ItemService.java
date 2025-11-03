@@ -35,5 +35,9 @@ public interface ItemService {
      * Delete an item by id
      */
     boolean deleteItem(Long id);
+    /**
+     * Search and item by name
+     */
+    Optional<Item> getItemByName(String name);
 
 }

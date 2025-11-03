@@ -83,6 +83,11 @@ public class ItemServiceImpl implements ItemService {
         return false;
     }
 
+    @Override
+    public Optional<Item> getItemByName(String name) {
+        log.debug("Getting item by name {}", name);
+        return jdbi.withExtension(ItemDao.class, dao -> dao.findByName(name));
+    }
 
 
 

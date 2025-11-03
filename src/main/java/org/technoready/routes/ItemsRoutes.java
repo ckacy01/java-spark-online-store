@@ -37,6 +37,8 @@ public class ItemsRoutes {
         path("api/v1/items", () -> {
             get("", itemController::getAllItems);
 
+            get("/search", itemController::getItemByName);
+
             get("/:id", itemController::getItemById);
 
             post("", itemController::createItem);
