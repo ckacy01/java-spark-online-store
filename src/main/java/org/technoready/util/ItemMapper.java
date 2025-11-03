@@ -6,6 +6,8 @@ import org.technoready.dto.request.UpdateItemRequest;
 import org.technoready.dto.response.ItemResponse;
 import org.technoready.entity.Item;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +22,11 @@ public class ItemMapper {
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
+                .available(request.isAvailable())
+                .currentPrice(request.getPrice())
+                .originalPrice(request.getPrice())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .build();
     }
 
@@ -29,6 +36,11 @@ public class ItemMapper {
                 .name(item.getName())
                 .description(item.getDescription())
                 .price(item.getPrice())
+                .available(item.isAvailable())
+                .currentPrice(item.getCurrentPrice())
+                .originalPrice(item.getOriginalPrice())
+                .createdAt(item.getCreatedAt())
+                .updatedAt(item.getUpdatedAt())
                 .build();
     }
 
@@ -45,9 +57,13 @@ public class ItemMapper {
         if(request.getDescription() != null && !request.getDescription().isEmpty()) {
             item.setDescription(request.getDescription());
         }
-        if(request.getPrice() >  0) {
+        if(request.getPrice() != null || request.getPrice().compareTo(BigDecimal.ZERO) > 0) {
             item.setPrice(request.getPrice());
         }
+        item.setUpdatedAt(LocalDateTime.now());
+        item.setCurrentPrice(request.getPrice());
+
         return item;
     }
+
 }

@@ -49,6 +49,20 @@ public class ItemController {
         }
     }
 
+    public String getAllAvailableItems(Request request, Response response) {
+        log.info("GET /items/availability - Fetching all items");
+        try{
+            List<Item> items = itemService.getAllAvailableItems();
+            List<ItemResponse> itemResponses = ItemMapper.toResponseList(items);
+            response.status(200);
+            return gson.toJson(ApiResponse.success(itemResponses));
+        }catch(Exception e){
+            log.error("Error while fetching all items", e);
+            response.status(500);
+            return gson.toJson(ApiResponse.error("Failed to get items:" + e.getMessage()));
+        }
+    }
+
     public String getItemById(Request request, Response response) {
         String idParam =  request.params(":id");
         log.info("GET /items/" + idParam);
@@ -176,6 +190,29 @@ public class ItemController {
             log.error("Error while getting item by name: " + e.getMessage(), e);
             response.status(500);
             return gson.toJson(ApiResponse.error("Failed to get item by name: " + e.getMessage()));
+        }
+    }
+
+    public String updateAvailability(Request request, Response response) {
+        String idParam = request.params(":id");
+        String availableParam = request.queryParams("available");
+        log.info("PATCH /items/{}/availability?available={}", idParam, availableParam);
+
+        try {
+            Long id = Long.parseLong(idParam);
+            Boolean available = Boolean.parseBoolean(availableParam);
+
+            if(!itemService.itemExists(id)){
+                response.status(400);
+                return gson.toJson(ApiResponse.error("Item not found!"));
+            }
+
+            itemService.updateItemAvailability(id, available);
+            response.status(200);
+            return gson.toJson(ApiResponse.success("Item availability updated to " + available, "id:" + id));
+        } catch (Exception e) {
+            response.status(400);
+            return gson.toJson(ApiResponse.error("Failed to update availability: " + e.getMessage()));
         }
     }
 

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class UpdateItemRequest {
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
 
     public void validate() {
         if (name == null || name.isEmpty()) {
@@ -21,7 +23,7 @@ public class UpdateItemRequest {
         if (description == null || description.isEmpty()) {
             throw new IllegalArgumentException("Description cannot be empty");
         }
-        if (price <= 0) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Price cannot be negative");
         }
     }

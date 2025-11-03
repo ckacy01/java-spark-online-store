@@ -31,6 +31,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public List<Item> getAllAvailableItems() {
+        log.debug("Getting all items available");
+        return jdbi.withExtension(ItemDao.class, ItemDao::findAllAvailable);
+    }
+
+    @Override
     public Item createItem(CreateItemRequest request) {
         log.debug("Creating item {}", request.getName());
         request.validate();
@@ -87,6 +93,18 @@ public class ItemServiceImpl implements ItemService {
     public Optional<Item> getItemByName(String name) {
         log.debug("Getting item by name {}", name);
         return jdbi.withExtension(ItemDao.class, dao -> dao.findByName(name));
+    }
+
+    @Override
+    public int updateItemAvailability(Long id, Boolean available) {
+        log.debug("Updating item availability {}", id);
+        return jdbi.withExtension(ItemDao.class, dao -> dao.updateAvailability(id, available));
+    }
+
+    @Override
+    public boolean itemExists(Long id) {
+        log.debug("Getting item with id {}", id);
+        return jdbi.withExtension(ItemDao.class, dao -> dao.exists(id));
     }
 
 

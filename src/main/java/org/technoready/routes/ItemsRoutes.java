@@ -39,6 +39,8 @@ public class ItemsRoutes {
 
             get("/search", itemController::getItemByName);
 
+            get("/availability", itemController::getAllAvailableItems);
+
             get("/:id", itemController::getItemById);
 
             post("", itemController::createItem);
@@ -46,6 +48,8 @@ public class ItemsRoutes {
             delete("/:id", itemController::deleteItem);
 
             put("/:id", itemController::updateItem);
+
+            patch("/availability/:id", itemController::updateAvailability);
         });
 
         after((request, response) -> response.type("application/json"));

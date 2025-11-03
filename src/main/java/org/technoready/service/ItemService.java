@@ -20,6 +20,10 @@ public interface ItemService {
      */
     List<Item> getAllItems();
     /**
+     * Find all available
+     */
+    List<Item> getAllAvailableItems();
+    /**
      * Create a new item
      */
     Item createItem(CreateItemRequest request);
@@ -39,5 +43,12 @@ public interface ItemService {
      * Search and item by name
      */
     Optional<Item> getItemByName(String name);
-
+    /**
+     * Update availability
+     */
+    int updateItemAvailability(Long id, Boolean available);
+    /**
+     * Item exists
+     */
+    boolean itemExists(Long id);
 }
