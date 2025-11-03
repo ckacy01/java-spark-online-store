@@ -1,4 +1,4 @@
-package org.technoready.dto.request;
+package org.technoready.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

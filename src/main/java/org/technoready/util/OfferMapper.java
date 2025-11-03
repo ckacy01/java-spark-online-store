@@ -3,7 +3,7 @@ package org.technoready.util;
 
 
 import org.technoready.dto.request.CreateOfferRequest;
-import org.technoready.dto.request.OfferWithDetailsResponse;
+import org.technoready.dto.response.OfferWithDetailsResponse;
 import org.technoready.dto.response.OfferResponse;
 import org.technoready.entity.Offer;
 import org.technoready.entity.OfferWithDetails;

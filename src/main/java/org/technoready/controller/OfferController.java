@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.technoready.dto.request.CreateOfferRequest;
-import org.technoready.dto.request.OfferWithDetailsResponse;
+import org.technoready.dto.response.OfferWithDetailsResponse;
 import org.technoready.dto.response.ApiResponse;
 import org.technoready.dto.response.OfferResponse;
 import org.technoready.entity.Offer;
