@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jdbi.v3.core.Jdbi;
 import org.technoready.config.DatabaseConfig;
 import org.technoready.config.EnvConfig;
+import org.technoready.exception.GlobalExceptionHandler;
 import org.technoready.routes.ItemsRoutes;
 import org.technoready.routes.UserRoutes;
 
@@ -30,6 +31,9 @@ public class Main {
             log.info("Database initialized successfully");
 
             DatabaseConfig.runSchema(jdbi);
+
+            // Initialize Exceptions
+            GlobalExceptionHandler.register();
 
             // Configure Spark
             port(config.getServerPort());
