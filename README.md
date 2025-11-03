@@ -23,17 +23,24 @@
 
 ## Features
 
-### Release 1.1.0 (Current)
+### Release 1.2.0 (Current)
 
 #### New in this Release
-- **Items Management** - Complete CRUD for collectible items
-- **Search Functionality** - Search items by name with partial matching
-- **Price Precision** - BigDecimal for accurate monetary calculations
-- **Sample Collectibles** - Pre-loaded Mexican celebrity memorabilia
-- **Enhanced Indexing** - Optimized queries for items table
+- **Items Management** - Complete CRUD for collectible items with availability and price tracking
+- **Offers Management System** - Full CRUD for offers, including:
+    - Offer entity with all details
+    - BigDecimal support for precise monetary handling
+    - OfferDao, OfferService, OfferController
+    - DTOs: `CreateOfferRequest`, `OfferResponse`, `OfferWithDetailsResponse`, `AcceptOfferRequest`
+- **Search Functionality** - Case-insensitive, partial-match search for items (`/items/search?name=xxx`)
+- **Database Enhancements**:
+    - Indexed `items` table for optimized queries
+    - Sample data with 7 authentic celebrity collectibles
+    - Conditional inserts to prevent duplicates
+- **API Enhancements** - Aggregated fields in item responses (`totalOffers`, `highestOffer`)
 
-#### Core Features (from v1.0.0)
-- **RESTful API** - Complete CRUD operations for users and items
+#### Core Features (from v1.1.0)
+- **RESTful API** - Complete CRUD operations for users, items, and offers
 - **Database Integration** - PostgreSQL with automatic schema initialization
 - **Connection Pooling** - HikariCP for high-performance database connections
 - **Environment Configuration** - Multi-environment support via `.env` files
@@ -52,7 +59,6 @@
 - **Auto-Generated Keys** - Database ID generation
 - **Input Validation** - Request validation with meaningful error messages
 - **Pretty JSON** - Human-readable API responses
-
 
 ## Project Structure
 ```
