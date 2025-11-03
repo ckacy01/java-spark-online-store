@@ -23,16 +23,21 @@
 
 ## Features
 
-### Release 1.0.0
+### Release 1.1.0 (Current)
 
-> **! Actual Version**
+#### New in this Release
+- **Items Management** - Complete CRUD for collectible items
+- **Search Functionality** - Search items by name with partial matching
+- **Price Precision** - BigDecimal for accurate monetary calculations
+- **Sample Collectibles** - Pre-loaded Mexican celebrity memorabilia
+- **Enhanced Indexing** - Optimized queries for items table
 
-#### Core Features
-- **RESTful API** - Complete CRUD operations for user management
+#### Core Features (from v1.0.0)
+- **RESTful API** - Complete CRUD operations for users and items
 - **Database Integration** - PostgreSQL with automatic schema initialization
 - **Connection Pooling** - HikariCP for high-performance database connections
-- **JSON Serialization** - Gson with custom LocalDateTime adapters
-- **Logging** - Comprehensive logging with Lombok (console)
+- **Environment Configuration** - Multi-environment support via `.env` files
+- **JSON Serialization** - Gson with custom LocalDateTime and BigDecimal adapters
 
 #### Architecture Features
 - **SOLID Principles** - Clean architecture with separation of concerns
@@ -43,10 +48,10 @@
 
 #### Development Features
 - **Lombok Integration** - Reduced boilerplate code
--  **Type-Safe Queries** - JDBI SQL Object API
+- **Type-Safe Queries** - JDBI SQL Object API
 - **Auto-Generated Keys** - Database ID generation
--  **Input Validation** - Request validation with meaningful error messages
--  **Pretty JSON** - Human-readable API responses
+- **Input Validation** - Request validation with meaningful error messages
+- **Pretty JSON** - Human-readable API responses
 
 
 ## Project Structure
@@ -396,7 +401,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - For detailed database documentation, see **[docs/DATABASE.md](docs/DATABASE.md)**
 - For detailed api documentation, see **[docs/API.md](docs/API.md)**
 - For detailed architecture documentation, see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
-
+- To see the changelog **[docs/CHANGELOG.md](docs/CHANGELOG.md)**
 
 ---
 
