@@ -86,7 +86,7 @@ java-spark-online-store/
 │   │   │
 │   │   ├── entity/                 # Domain models
 │   │   │
-│   │   ├── exception/              # Custom exceptions (future)
+│   │   ├── exception/              # Custom exceptions
 │   │   │
 │   │   ├── routes/                 # Route configuration
 │   │   │
