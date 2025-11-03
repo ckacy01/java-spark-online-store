@@ -12,6 +12,7 @@ import org.technoready.exception.NotFoundException;
 import org.technoready.service.ItemService;
 import org.technoready.util.ItemMapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,6 +115,16 @@ public class ItemServiceImpl implements ItemService {
         return jdbi.withExtension(ItemDao.class, dao -> dao.exists(id));
     }
 
+    @Override
+    public int getOfferCountForItem(Long itemId) {
+        log.debug("Getting offer count for item: {}", itemId);
+        return jdbi.withExtension(ItemDao.class, dao -> dao.countOffersByItemId(itemId));
+    }
 
+    @Override
+    public BigDecimal getHighestOfferForItem(Long itemId) {
+        log.debug("Getting highest offer for item: {}", itemId);
+        return jdbi.withExtension(ItemDao.class, dao -> dao.getHighestOfferByItemId(itemId));
+    }
 
 }

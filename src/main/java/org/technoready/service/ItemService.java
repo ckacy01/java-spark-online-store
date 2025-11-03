@@ -4,6 +4,7 @@ import org.technoready.dto.request.CreateItemRequest;
 import org.technoready.dto.request.UpdateItemRequest;
 import org.technoready.entity.Item;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,4 +52,13 @@ public interface ItemService {
      * Item exists
      */
     boolean itemExists(Long id);
+    /**
+     * Get total offers count for an item
+     */
+    int getOfferCountForItem(Long itemId);
+
+    /**
+     * Get highest offer amount for an item
+     */
+    BigDecimal getHighestOfferForItem(Long itemId);
 }
