@@ -29,4 +29,6 @@ public class ItemResponse {
     private BigDecimal originalPrice;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Integer totalOffers;
+    private BigDecimal highestOffer;
 }
