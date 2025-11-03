@@ -400,6 +400,38 @@ curl -X GET "http://localhost:4567/items/search?name=autograf"
 
 ---
 
+### Offers (NEW in v1.2.0)
+
+#### Get All Offers
+- **Endpoint:** GET /offers.
+- **Description:** Retrieve a list of all offers.
+
+#### Get Offer by ID
+- **Endpoint:** GET /offers/:id
+- **Description:** Retrieve a specific offer by its ID.
+
+#### Create Offer
+- **Endpoint:** POST /offers
+- **Description:** Create a new offer for an item.
+
+#### Update Offer
+- **Endpoint:** PUT /offers/:id
+- **Description:** Update an existing offer.
+
+#### Accept Offer
+- **Endpoint:** POST /offers/:id/accept
+- **Description:** Accept a pending offer.
+
+#### Delete Offer
+- **Endpoint:** DELETE /offers/:id
+- **Description:** Delete an offer by ID.
+
+#### Check Offer Exists
+- **Endpoint:** OPTIONS /offers/:id
+- **Description:** Check if an offer exists without retrieving full data.
+
+---
+
 ## Error Codes
 
 | Status Code | Meaning |
