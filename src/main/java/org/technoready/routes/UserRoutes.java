@@ -35,7 +35,7 @@ public class UserRoutes {
         log.info("Configuring user routes...");
         before((req, res) -> res.type("application/json"));
         // Base path for all user routes
-        path("/users", () -> {
+        path("api/v1/users", () -> {
 
             // GET /users - Retrieve all users
             get("", userController::getAllUsers);

@@ -21,6 +21,7 @@ The Order Management System uses PostgreSQL as its relational database. The data
 | created_at | TIMESTAMP | NOT NULL | CURRENT_TIMESTAMP | Record creation timestamp |
 | updated_at | TIMESTAMP | NOT NULL | CURRENT_TIMESTAMP | Last update timestamp |
 
+
 ### Indexes
 
 1. **idx_users_username**
@@ -38,6 +39,35 @@ The Order Management System uses PostgreSQL as its relational database. The data
     - Type: B-tree
     - Purpose: Efficient chronological queries and sorting
 
+### Items Table (NEW in v1.1.0)
+
+**Table Name:** `items`
+
+| Column | Type | Constraints | Default | Description |
+|--------|------|-------------|---------|-------------|
+| id |BIGSERIAL | PRIMARY KEY | AUTO | Unique item identifier |
+| name | VARCHAR(50) | NOT NULL | - | Item name |
+| description | TEXT | NULL | - | Detailed item description |
+| price | DECIMAL(10,2) | NOT NULL | - | Item price (up to 99,999,999.99) |
+Indexes
+Items Table Indexes
+
+1. idx_items_name
+   -   Column: name
+   - Type: B-tree
+   - Purpose: Fast name lookups and search operations
+2. idx_items_description
+   - Column: description
+   - Type: B-tree
+   - Purpose: Full-text search capabilities
+
+3. idx_items_price
+   - Column: price
+   - Type: B-tree
+   - Purpose: Price-based queries and sorting
+
+
+
 ## Entity-Relationship Diagram
 ```
 ┌─────────────────────────────┐
@@ -49,6 +79,14 @@ The Order Management System uses PostgreSQL as its relational database. The data
 │     full_name (VARCHAR(100))│
 │     created_at (TIMESTAMP)  │
 │     updated_at (TIMESTAMP)  │
+└─────────────────────────────┘
+┌─────────────────────────────┐
+│          ITEMS              │
+├─────────────────────────────┤
+│ PK  id (BIGSERIAL)          │
+│     name (VARCHAR(50))      │
+│     description (TEXT)      │
+│     price (DECIMAL(10,2))   │
 └─────────────────────────────┘
 ```
 
@@ -97,6 +135,7 @@ INSERT INTO users (username, email, full_name) VALUES
     ('rafael', 'rafael@example.com', 'Rafael García'),
     ('sofia', 'sofia@example.com', 'Sofía Martínez'),
     ('ramon', 'ramon@example.com', 'Ramón Collector');
+...
 ```
 
 ## Database Operations
@@ -191,6 +230,3 @@ Planned additions for future releases:
 1. **Offers Table**
     - Store offer information
     - Foreign key to users table
-
-2. **Products Table**
-    - Product catalog
