@@ -69,10 +69,10 @@ END IF;
     -- Insert items
     IF NOT EXISTS (SELECT 1 FROM items) THEN
         INSERT INTO items (name, description, price, current_price, original_price, available, created_at, updated_at) VALUES
-            ('Gorra autografiada por Peso Pluma', 'Una gorra autografiada por el famoso Peso Pluma.', 621.34, 621.34, 621.34, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-            ('Casco autografiado por Rosalía', 'Un casco autografiado por la famosa cantante Rosalía, una verdadera MOTOMAMI!', 734.57, 734.57, 734.57, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-            ('Chamarra de Bad Bunny', 'Una chamarra de la marca favorita de Bad Bunny, autografiada por el propio artista.', 521.89, 521.89, 521.89, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-            ('Guitarra de Fernando Delgadillo', 'Una guitarra acústica de alta calidad utilizada por el famoso cantautor Fernando Delgadillo.', 823.12, 823.12, 823.12, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+            ('Gorra autografiada por Peso Pluma', 'Una gorra autografiada por el famoso Peso Pluma.', 621.34, 650.00, 621.34, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+            ('Casco autografiado por Rosalía', 'Un casco autografiado por la famosa cantante Rosalía, una verdadera MOTOMAMI!', 734.57, 750.00, 734.57, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+            ('Chamarra de Bad Bunny', 'Una chamarra de la marca favorita de Bad Bunny, autografiada por el propio artista.', 521.89, 750.00, 521.89, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+            ('Guitarra de Fernando Delgadillo', 'Una guitarra acústica de alta calidad utilizada por el famoso cantautor Fernando Delgadillo.', 823.12, 900.00, 823.12, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
             ('Jersey firmado por Snoop Dogg', 'Un jersey autografiado por el legendario rapero Snoop Dogg.', 355.67, 355.67, 355.67, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
             ('Prenda de Cardi B autografiada', 'Un crop-top usado y autografiado por la famosa rapera Cardi B. en su última visita a México', 674.23, 674.23, 674.23, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
             ('Guitarra autografiada por Coldplay', 'Una guitarra eléctrica autografiada por la popular banda británica Coldplay, un día antes de su concierto en Monterrey en 2022.', 458.91, 458.91, 458.91, TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
@@ -82,7 +82,7 @@ END IF;
     IF NOT EXISTS (SELECT 1 FROM offers) THEN
         INSERT INTO offers (item_id, user_id, offer_amount, status, message, created_at) VALUES
             (1, 1, 650.00, 'PENDING', 'Me encanta Peso Pluma, ofrezco más del precio inicial!', CURRENT_TIMESTAMP),
-            (1, 2, 700.00, 'PENDING', 'Ofrezco más para llevarme esta gorra única!', CURRENT_TIMESTAMP),
+            (1, 2, 750.00, 'PENDING', 'Ofrezco más para llevarme esta gorra única!', CURRENT_TIMESTAMP),
             (2, 3, 750.00, 'PENDING', 'Fan de Rosalía, quiero este casco!', CURRENT_TIMESTAMP),
             (3, 1, 550.00, 'PENDING', 'Gran precio por esta chamarra de Bad Bunny', CURRENT_TIMESTAMP),
             (4, 4, 900.00, 'PENDING', 'Soy coleccionista de instrumentos musicales', CURRENT_TIMESTAMP);
