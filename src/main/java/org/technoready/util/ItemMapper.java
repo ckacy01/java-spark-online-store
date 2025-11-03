@@ -41,6 +41,8 @@ public class ItemMapper {
                 .originalPrice(item.getOriginalPrice())
                 .createdAt(item.getCreatedAt())
                 .updatedAt(item.getUpdatedAt())
+                .totalOffers(item.getTotalOffers())
+                .highestOffer(item.getHighestOffer())
                 .build();
     }
 
@@ -64,6 +66,13 @@ public class ItemMapper {
         item.setCurrentPrice(request.getPrice());
 
         return item;
+    }
+    
+    public static ItemResponse toResponseWithStats(Item item, Integer totalOffers, java.math.BigDecimal highestOffer) {
+        ItemResponse response = toResponse(item);
+        response.setTotalOffers(totalOffers);
+        response.setHighestOffer(highestOffer);
+        return response;
     }
 
 }
