@@ -7,6 +7,7 @@ import org.technoready.config.DatabaseConfig;
 import org.technoready.config.EnvConfig;
 import org.technoready.exception.GlobalExceptionHandler;
 import org.technoready.routes.ItemsRoutes;
+import org.technoready.routes.OfferRoutes;
 import org.technoready.routes.UserRoutes;
 
 import static spark.Spark.*;
@@ -43,6 +44,8 @@ public class Main {
             userRoutes.configure();
             ItemsRoutes itemsRoutes = new ItemsRoutes(jdbi);
             itemsRoutes.configure();
+            OfferRoutes offerRoutes = new OfferRoutes(jdbi);
+            offerRoutes.configure();
 
             log.info("Application started successfully on port {}", config.getServerPort());
 
