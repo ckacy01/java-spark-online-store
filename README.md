@@ -9,6 +9,7 @@
 ## Table of Contents
 
 - [Features](#features)
+- [View](#View)
 - [Project Structure](#project-structure)
 - [Technologies](#technologies)
 - [Prerequisites](#prerequisites)
@@ -23,23 +24,15 @@
 
 ## Features
 
-### Release 1.2.0 (Current)
+### Release 1.3.0 (Current)
 
 #### New in this Release
-- **Items Management** - Complete CRUD for collectible items with availability and price tracking
-- **Offers Management System** - Full CRUD for offers, including:
-    - Offer entity with all details
-    - BigDecimal support for precise monetary handling
-    - OfferDao, OfferService, OfferController
-    - DTOs: `CreateOfferRequest`, `OfferResponse`, `OfferWithDetailsResponse`, `AcceptOfferRequest`
-- **Search Functionality** - Case-insensitive, partial-match search for items (`/items/search?name=xxx`)
-- **Database Enhancements**:
-    - Indexed `items` table for optimized queries
-    - Sample data with 7 authentic celebrity collectibles
-    - Conditional inserts to prevent duplicates
-- **API Enhancements** - Aggregated fields in item responses (`totalOffers`, `highestOffer`)
+- Creating views Mustache to connect with the backend.
+- Creating a js script to communicate with each endpoint.
+- Adding a new WebViewController and WebRoutes to manage the views.
+- Adding some styles with main.css to make the views prettier.
 
-#### Core Features (from v1.1.0)
+#### Core Features (from v1.2.0)
 - **RESTful API** - Complete CRUD operations for users, items, and offers
 - **Database Integration** - PostgreSQL with automatic schema initialization
 - **Connection Pooling** - HikariCP for high-performance database connections
@@ -59,6 +52,25 @@
 - **Auto-Generated Keys** - Database ID generation
 - **Input Validation** - Request validation with meaningful error messages
 - **Pretty JSON** - Human-readable API responses
+
+## View
+This fronted was created using Mustache, JS y CSS. Communicate with the backend using fetch
+
+### Home view
+This shows all the items available in the database, and you can bid anyone if you want.
+![Home View](docs/screenshots/HOME.png)
+
+### Make an offer
+This displays you a form to make an offer, this view has forms validators.
+![Make an offer](docs/screenshots/SUBMIT_AN_OFFER.png)
+
+### Profiles
+For this moment because is a development environment you can display all the offers of each user in the system.
+![PROFILES](docs/screenshots/PROFILES.png)
+
+### My offers
+In this view you can check if the seller accept, reject or someone outbid your offer or also if this one is pending.
+![My offers](docs/screenshots/MY-OFFERS.png)
 
 ## Project Structure
 ```
