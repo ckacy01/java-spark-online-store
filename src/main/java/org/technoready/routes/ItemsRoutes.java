@@ -32,9 +32,10 @@ public class ItemsRoutes {
      */
     public void configure() {
         log.info("Configuring ItemRoutes");
-        before((request, response) -> response.type("application/json"));
 
         path("api/v1/items", () -> {
+            before("/*", (request, response) -> response.type("application/json"));
+
             get("", itemController::getAllItems);
 
             get("/search", itemController::getItemByName);
@@ -50,8 +51,10 @@ public class ItemsRoutes {
             put("/:id", itemController::updateItem);
 
             patch("/availability/:id", itemController::updateAvailability);
+
+            after("/*", (request, response) -> response.type("application/json"));
+
         });
 
-        after((request, response) -> response.type("application/json"));
     }
 }
