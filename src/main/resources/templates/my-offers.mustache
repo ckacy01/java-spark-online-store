@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>My Offers</h1>
+        <nav>
+            <a href="/">← Back to Items</a>
+            <a href="/users">Change Profile</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="user-info-banner">
+            <h2>{{user.fullName}} (@{{user.username}})</h2>
+            <p>All your offers in one place</p>
+        </div>
+
+        {{#hasOffers}}
+            <div class="offers-grid">
+                {{#offers}}
+                    <div class="my-offer-card status-{{status}}">
+                        <div class="offer-item-info">
+                            <h3>
+                                <a href="/item/{{itemId}}">{{itemName}}</a>
+                            </h3>
+                            <div class="offer-prices">
+                                <span class="my-offer-amount">My Offer: ${{offerAmount}}</span>
+                                <span class="item-current-price">Current: ${{itemCurrentPrice}}</span>
+                            </div>
+                        </div>
+
+                        <div class="offer-status-section">
+                        <span class="status-badge status-badge-{{status}}">
+                            {{#isPending}}🟡 PENDING{{/isPending}}
+                            {{#isAccepted}}✅ WON! ACCEPTED{{/isAccepted}}
+                            {{#isRejected}}❌ REJECTED{{/isRejected}}
+                            {{#isOutbid}}⬆️ OUTBID - Bid Higher{{/isOutbid}}
+                        </span>
+                        </div>
+
+                        {{#message}}
+                            <div class="offer-message">
+                                <p>💬 {{message}}</p>
+                            </div>
+                        {{/message}}
+
+                        <div class="offer-meta">
+                            <small>Created: {{createdAt}}</small>
+                            {{#itemIsAvailable}}
+                                <span class="item-status available">Item Available</span>
+                            {{/itemIsAvailable}}
+                            {{^itemIsAvailable}}
+                                <span class="item-status sold">Item Sold</span>
+                            {{/itemIsAvailable}}
+                        </div>
+
+                        <div class="offer-actions">
+                            {{#isPending}}
+                                {{#itemIsAvailable}}
+                                    <a href="/item/{{itemId}}" class="btn btn-secondary btn-small">
+                                        Increase Bid
+                                    </a>
+                                {{/itemIsAvailable}}
+                            {{/isPending}}
+
+                            {{#isOutbid}}
+                                {{#itemIsAvailable}}
+                                    <a href="/item/{{itemId}}" class="btn btn-primary btn-small">
+                                        Make New Offer
+                                    </a>
+                                {{/itemIsAvailable}}
+                            {{/isOutbid}}
+
+                            <a href="/item/{{itemId}}" class="btn btn-link btn-small">
+                                View Item
+                            </a>
+                        </div>
+                    </div>
+                {{/offers}}
+            </div>
+        {{/hasOffers}}
+
+        {{^hasOffers}}
+            <div class="empty-state">
+                <h2>You haven't made any offers yet</h2>
+                <p>Browse our collection and start bidding on your favorite items!</p>
+                <a href="/" class="btn btn-primary">Browse Items</a>
+            </div>
+        {{/hasOffers}}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Technoready Collectibles</p>
+    </footer>
+</div>
+</body>
+</html>
