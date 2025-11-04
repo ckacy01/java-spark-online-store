@@ -9,6 +9,7 @@
 ## Table of Contents
 
 - [Features](#features)
+- [View](#View)
 - [Project Structure](#project-structure)
 - [Technologies](#technologies)
 - [Prerequisites](#prerequisites)
@@ -23,16 +24,20 @@
 
 ## Features
 
-### Release 1.0.0
+### Release 1.3.0 (Current)
 
-> **! Actual Version**
+#### New in this Release
+- Creating views Mustache to connect with the backend.
+- Creating a js script to communicate with each endpoint.
+- Adding a new WebViewController and WebRoutes to manage the views.
+- Adding some styles with main.css to make the views prettier.
 
-#### Core Features
-- **RESTful API** - Complete CRUD operations for user management
+#### Core Features (from v1.2.0)
+- **RESTful API** - Complete CRUD operations for users, items, and offers
 - **Database Integration** - PostgreSQL with automatic schema initialization
 - **Connection Pooling** - HikariCP for high-performance database connections
-- **JSON Serialization** - Gson with custom LocalDateTime adapters
-- **Logging** - Comprehensive logging with Lombok (console)
+- **Environment Configuration** - Multi-environment support via `.env` files
+- **JSON Serialization** - Gson with custom LocalDateTime and BigDecimal adapters
 
 #### Architecture Features
 - **SOLID Principles** - Clean architecture with separation of concerns
@@ -43,11 +48,29 @@
 
 #### Development Features
 - **Lombok Integration** - Reduced boilerplate code
--  **Type-Safe Queries** - JDBI SQL Object API
+- **Type-Safe Queries** - JDBI SQL Object API
 - **Auto-Generated Keys** - Database ID generation
--  **Input Validation** - Request validation with meaningful error messages
--  **Pretty JSON** - Human-readable API responses
+- **Input Validation** - Request validation with meaningful error messages
+- **Pretty JSON** - Human-readable API responses
 
+## View
+This fronted was created using Mustache, JS y CSS. Communicate with the backend using fetch
+
+### Home view
+This shows all the items available in the database, and you can bid anyone if you want.
+![Home View](docs/screenshots/HOME.png)
+
+### Make an offer
+This displays you a form to make an offer, this view has forms validators.
+![Make an offer](docs/screenshots/SUBMIT_AN_OFFER.png)
+
+### Profiles
+For this moment because is a development environment you can display all the offers of each user in the system.
+![PROFILES](docs/screenshots/PROFILES.png)
+
+### My offers
+In this view you can check if the seller accept, reject or someone outbid your offer or also if this one is pending.
+![My offers](docs/screenshots/MY-OFFERS.png)
 
 ## Project Structure
 ```
@@ -66,36 +89,23 @@ java-spark-online-store/
 │   │   │   └── GsonConfig.java     # JSON serialization config
 │   │   │
 │   │   ├── controller/             # HTTP request handlers
-│   │   │   └── UserController.java # User endpoint logic
-│   │   │
+│   │   │ 
 │   │   ├── dao/                    # Data Access Objects
-│   │   │   └── UserDao.java        # JDBI interface for DB operations
 │   │   │
 │   │   ├── dto/                    # Data Transfer Objects
 │   │   │   ├── request/            # API request models
-│   │   │   │   ├── CreateUserRequest.java
-│   │   │   │   └── UpdateUserRequest.java
 │   │   │   └── response/           # API response models
-│   │   │       ├── UserResponse.java
-│   │   │       ├── ApiResponse.java
-│   │   │       └── ErrorResponse.java
 │   │   │
 │   │   ├── entity/                 # Domain models
-│   │   │   └── User.java           # User entity (database model)
 │   │   │
-│   │   ├── exception/              # Custom exceptions (future)
+│   │   ├── exception/              # Custom exceptions
 │   │   │
 │   │   ├── routes/                 # Route configuration
-│   │   │   └── UserRoutes.java     # User endpoint definitions
 │   │   │
 │   │   ├── service/                # Business logic layer
-│   │   │   ├── UserService.java    # Service interface
 │   │   │   └── impl/
-│   │   │       └── UserServiceImpl.java
 │   │   │
 │   │   ├── util/                   # Utility classes
-│   │   │   ├── UserMapper.java     # DTO ↔ Entity mapping
-│   │   │   └── LocalDateTimeAdapter.java # Gson adapter
 │   │   │
 │   │   ├── web/                    # Web sockets (future)
 │   │   │
@@ -104,7 +114,8 @@ java-spark-online-store/
 │   └── resources/
 │       ├── db/
 │       │   └── schema.sql          # Database initialization script
-│       └── frontend/               # Static resources (future)
+│       ├── templates/              # Mustache files
+│       └── public/                 # Static resources
 │
 ├── .env.example                    # Environment template
 ├── .gitignore                      # Git ignore rules
@@ -409,7 +420,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - For detailed database documentation, see **[docs/DATABASE.md](docs/DATABASE.md)**
 - For detailed api documentation, see **[docs/API.md](docs/API.md)**
 - For detailed architecture documentation, see **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**
-
+- To see the changelog **[docs/CHANGELOG.md](docs/CHANGELOG.md)**
 
 ---
 

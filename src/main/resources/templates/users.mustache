@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Select Your Profile</h1>
+        <nav>
+            <a href="/">← Back to Items</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="users-intro">
+            <h2>Choose your user profile</h2>
+            <p>Select a profile to view your offers and bid on items</p>
+        </div>
+
+        {{#hasUsers}}
+            <div class="users-grid">
+                {{#users}}
+                    <div class="user-card">
+                        <div class="user-avatar">
+                            {{username.0}}
+                        </div>
+                        <div class="user-info">
+                            <h3>{{fullName}}</h3>
+                            <p class="username">@{{username}}</p>
+                            <p class="email">{{email}}</p>
+                        </div>
+                        <div class="user-actions">
+                            <a href="/my-offers/{{id}}" class="btn btn-primary btn-block">
+                                View My Offers
+                            </a>
+                            <a href="/" class="btn btn-secondary btn-block">
+                                Browse Items
+                            </a>
+                        </div>
+                    </div>
+                {{/users}}
+            </div>
+        {{/hasUsers}}
+
+        {{^hasUsers}}
+            <div class="empty-state">
+                <h2>No users available</h2>
+                <p>Please contact the administrator to create user accounts.</p>
+            </div>
+        {{/hasUsers}}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Technoready Collectibles</p>
+    </footer>
+</div>
+</body>
+</html>

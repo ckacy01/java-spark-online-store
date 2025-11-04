@@ -3,7 +3,7 @@
 
 ## Base URL
 ```
-http://localhost:4567
+http://localhost:4567/api/v1
 ```
 
 ## Authentication
@@ -278,6 +278,157 @@ curl -X DELETE http://localhost:4567/users/1
 ```bash
 curl -X OPTIONS http://localhost:4567/users/1
 ```
+
+---
+## Items
+
+### Get All Items
+
+**Endpoint:** `GET /items`
+
+**Description:** Retrieve a list of all collectible items.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Gorra autografiada por Peso Pluma",
+      "description": "Una gorra autografiada por el famoso Peso Pluma.",
+      "price": 621.34
+    }
+  ]
+}
+```
+
+**Example:**
+```bash
+curl -X GET http://localhost:4567/items
+```
+
+---
+
+### Get Item by ID
+
+**Endpoint:** `GET /items/:id`
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Gorra autografiada por Peso Pluma",
+    "description": "Una gorra autografiada por el famoso Peso Pluma.",
+    "price": 621.34
+  }
+}
+```
+
+---
+
+### Search Items
+
+**Endpoint:** `GET /items/search?name=xxx`
+
+**Description:** Search items by name (case-insensitive, partial match).
+
+**Query Parameters:**
+- `name` (required) - Search term
+
+**Example:**
+```bash
+curl -X GET "http://localhost:4567/items/search?name=autograf"
+```
+
+---
+
+### Create Item
+
+**Endpoint:** `POST /items`
+
+**Request Body:**
+```json
+{
+  "name": "Vinyl Record Signed",
+  "description": "Limited edition vinyl record",
+  "price": 499.99
+}
+```
+
+**Validation:**
+- `name`: Required, max 50 characters
+- `description`: Optional, text
+- `price`: Required, > 0, max 2 decimal places
+
+**Response (201):**
+```json
+{
+  "success": true,
+  "message": "Item created successfully",
+  "data": {
+    "id": 8,
+    "name": "Vinyl Record Signed",
+    "description": "Limited edition vinyl record",
+    "price": 499.99
+  }
+}
+```
+
+---
+
+### Update Item
+
+**Endpoint:** `PUT /items/:id`
+
+**Request Body:**
+```json
+{
+  "name": "Updated Name",
+  "description": "Updated description",
+  "price": 599.99
+}
+```
+
+---
+
+### Delete Item
+
+**Endpoint:** `DELETE /items/:id`
+
+---
+
+### Offers (NEW in v1.2.0)
+
+#### Get All Offers
+- **Endpoint:** GET /offers.
+- **Description:** Retrieve a list of all offers.
+
+#### Get Offer by ID
+- **Endpoint:** GET /offers/:id
+- **Description:** Retrieve a specific offer by its ID.
+
+#### Create Offer
+- **Endpoint:** POST /offers
+- **Description:** Create a new offer for an item.
+
+#### Update Offer
+- **Endpoint:** PUT /offers/:id
+- **Description:** Update an existing offer.
+
+#### Accept Offer
+- **Endpoint:** POST /offers/:id/accept
+- **Description:** Accept a pending offer.
+
+#### Delete Offer
+- **Endpoint:** DELETE /offers/:id
+- **Description:** Delete an offer by ID.
+
+#### Check Offer Exists
+- **Endpoint:** OPTIONS /offers/:id
+- **Description:** Check if an offer exists without retrieving full data.
 
 ---
 
