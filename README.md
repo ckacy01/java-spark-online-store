@@ -102,7 +102,8 @@ java-spark-online-store/
 │   └── resources/
 │       ├── db/
 │       │   └── schema.sql          # Database initialization script
-│       └── frontend/               # Static resources (future)
+│       ├── templates/              # Mustache files
+│       └── public/                 # Static resources
 │
 ├── .env.example                    # Environment template
 ├── .gitignore                      # Git ignore rules
