@@ -9,6 +9,7 @@ import org.technoready.exception.GlobalExceptionHandler;
 import org.technoready.routes.ItemsRoutes;
 import org.technoready.routes.OfferRoutes;
 import org.technoready.routes.UserRoutes;
+import org.technoready.routes.WebRoutes;
 
 import static spark.Spark.*;
 
@@ -22,7 +23,9 @@ public class Main {
             Dotenv dotenv = Dotenv.configure()
                     .ignoreIfMissing()
                     .load();
-
+            // Serve static files (CSS, JS, images)
+            staticFiles.location("/public");
+            staticFiles.expireTime(600); // 10 minutes cache
             // Load configuration
             EnvConfig config = EnvConfig.load(dotenv);
             log.info("Configuration loaded successfully");
@@ -47,6 +50,17 @@ public class Main {
             OfferRoutes offerRoutes = new OfferRoutes(jdbi);
             offerRoutes.configure();
 
+            WebRoutes webRoutes = new WebRoutes(jdbi);
+            webRoutes.configure();
+
+            before((req, res) -> {
+                if (req.pathInfo().startsWith("/api/")) {
+                    res.type("application/json");
+                } else {
+                    res.type("text/html; charset=utf-8");
+                }
+            });
+
             log.info("Application started successfully on port {}", config.getServerPort());
 
         } catch (Exception e) {
@@ -54,4 +68,4 @@ public class Main {
             System.exit(1);
         }
     }
-    }
+}
