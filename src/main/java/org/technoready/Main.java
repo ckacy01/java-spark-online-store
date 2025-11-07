@@ -10,6 +10,7 @@ import org.technoready.routes.ItemsRoutes;
 import org.technoready.routes.OfferRoutes;
 import org.technoready.routes.UserRoutes;
 import org.technoready.routes.WebRoutes;
+import org.technoready.web.WebSocketHandler;
 
 import static spark.Spark.*;
 
@@ -41,6 +42,10 @@ public class Main {
 
             // Configure Spark
             port(config.getServerPort());
+
+            // Initialize WS
+            webSocket("/ws/auction", WebSocketHandler.class);
+            log.info("WebSocket endpoint configured at: ws://localhost:{}/ws/auction", config.getServerPort());
 
             // Configure routes
             UserRoutes userRoutes = new UserRoutes(jdbi);
