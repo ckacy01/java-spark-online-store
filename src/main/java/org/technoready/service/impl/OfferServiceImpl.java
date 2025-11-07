@@ -15,9 +15,12 @@ import org.technoready.exception.ConflictException;
 import org.technoready.exception.NotFoundException;
 import org.technoready.service.OfferService;
 import org.technoready.util.OfferMapper;
+import org.technoready.web.WebSocketHandler;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -89,7 +92,6 @@ public class OfferServiceImpl implements OfferService {
     public Offer createOffer(CreateOfferRequest request) {
         log.info("Creating new offer for item {} by user {}", request.getItemId(), request.getUserId());
 
-        // Validate request
         request.validate();
 
         return jdbi.inTransaction(handle -> {
@@ -97,19 +99,15 @@ public class OfferServiceImpl implements OfferService {
             UserDao userDao = handle.attach(UserDao.class);
             OfferDao offerDao = handle.attach(OfferDao.class);
 
-            // Verify item exists and is available
             Item item = itemDao.findById(request.getItemId())
-                    .orElseThrow(() -> new NotFoundException("Item not found with id: " + request.getItemId()));
+                    .orElseThrow(() -> new IllegalArgumentException("Item not found with id: " + request.getItemId()));
 
             if (!item.isAvailable()) {
-                log.warn("Item {} is not available", item.getId() + item.getName());
-                log.info("Item {} is not available", item.isAvailable());
-                throw new ConflictException("Item is no longer available for offers");
+                throw new IllegalArgumentException("Item is no longer available for offers");
             }
 
-            // Verify user exists
             User user = userDao.findById(request.getUserId())
-                    .orElseThrow(() -> new NotFoundException("User not found with id: " + request.getUserId()));
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + request.getUserId()));
 
             // Create offer
             Offer offer = OfferMapper.toEntity(request);
@@ -118,15 +116,57 @@ public class OfferServiceImpl implements OfferService {
 
             // Update item's current price if this offer is higher
             if (request.getOfferAmount().compareTo(item.getCurrentPrice()) > 0) {
+
+                List<Offer> offersToOutbid = offerDao.findByItemIdAndStatus(item.getId(), "PENDING");
+
                 itemDao.updateCurrentPrice(item.getId(), request.getOfferAmount());
                 log.info("Updated item {} current price to {}", item.getId(), request.getOfferAmount());
 
                 // Mark other pending offers for this item as OUTBID
                 int outbidCount = offerDao.markOthersAsOutbid(item.getId(), generatedId, "OUTBID");
                 log.info("Marked {} offers as OUTBID for item {}", outbidCount, item.getId());
-            }else {
-                log.info("Offers less");
-                throw new ConflictException("You can't offer less than the original price");
+
+                // ========== WEBSOCKET BROADCASTS ==========
+
+                // 1. Broadcast new offer to all watchers
+                Map<String, Object> offerData = new HashMap<>();
+                offerData.put("id", generatedId);
+                offerData.put("offerAmount", request.getOfferAmount().doubleValue());
+                offerData.put("username", user.getUsername());
+                offerData.put("userFullName", user.getFullName());
+                offerData.put("message", request.getMessage());
+                offerData.put("status", "PENDING");
+                offerData.put("createdAt", LocalDateTime.now().toString());
+
+                WebSocketHandler.broadcastNewOffer(item.getId(), offerData);
+
+                // 2. Broadcast price update
+                WebSocketHandler.broadcastPriceUpdate(
+                        item.getId(),
+                        request.getOfferAmount().doubleValue()
+                );
+
+                // 3. Broadcast OUTBID status para cada oferta que fue superada
+                for (Offer outbidOffer : offersToOutbid) {
+                    if (!outbidOffer.getId().equals(generatedId)) {
+                        WebSocketHandler.broadcastOfferStatusChange(
+                                item.getId(),
+                                outbidOffer.getId(),
+                                "OUTBID"
+                        );
+                        log.debug("Broadcasted OUTBID status for offer {}", outbidOffer.getId());
+                    }
+                }
+
+                // 4. Notify users who were outbid (simplified - notifies all)
+                if (outbidCount > 0) {
+                    WebSocketHandler.notifyOutbid(
+                            null, // In real app, get actual user IDs
+                            item.getId(),
+                            item.getCurrentPrice().doubleValue(),
+                            request.getOfferAmount().doubleValue()
+                    );
+                }
             }
 
             log.info("Offer created successfully with id: {}", generatedId);
@@ -142,13 +182,14 @@ public class OfferServiceImpl implements OfferService {
             OfferDao offerDao = handle.attach(OfferDao.class);
             ItemDao itemDao = handle.attach(ItemDao.class);
 
-            // Get offer
             Offer offer = offerDao.findById(offerId)
-                    .orElseThrow(() -> new NotFoundException("Offer not found with id: " + offerId));
+                    .orElseThrow(() -> new IllegalArgumentException("Offer not found with id: " + offerId));
 
             if (offer.getStatus() != Offer.OfferStatus.PENDING) {
-                throw new ConflictException("Only pending offers can be accepted");
+                throw new IllegalArgumentException("Only pending offers can be accepted");
             }
+
+            List<Offer> offersToReject = offerDao.findByItemIdAndStatus(offer.getItemId(), "PENDING");
 
             // Update offer status to ACCEPTED
             offerDao.updateStatus(offerId, "ACCEPTED", LocalDateTime.now());
@@ -162,10 +203,33 @@ public class OfferServiceImpl implements OfferService {
             int rejectedCount = offerDao.markOthersAsOutbid(offer.getItemId(), offerId, "REJECTED");
             log.info("Marked {} other offers as REJECTED for item {}", rejectedCount, offer.getItemId());
 
+            // ========== WEBSOCKET BROADCASTS ==========
+
+            // 1. Broadcast item sold
+            WebSocketHandler.broadcastItemSold(offer.getItemId(), offer.getUserId());
+
+            WebSocketHandler.broadcastOfferStatusChange(
+                    offer.getItemId(),
+                    offerId,
+                    "ACCEPTED"
+            );
+
+            for (Offer rejectedOffer : offersToReject) {
+                if (!rejectedOffer.getId().equals(offerId)) {
+                    WebSocketHandler.broadcastOfferStatusChange(
+                            offer.getItemId(),
+                            rejectedOffer.getId(),
+                            "REJECTED"
+                    );
+                    log.debug("Broadcasted REJECTED status for offer {}", rejectedOffer.getId());
+                }
+            }
+
             log.info("Offer {} accepted successfully", offerId);
             return offer;
         });
     }
+
 
     @Override
     public Offer rejectOffer(Long offerId) {
@@ -186,6 +250,13 @@ public class OfferServiceImpl implements OfferService {
             offerDao.updateStatus(offerId, "REJECTED", LocalDateTime.now());
             offer.setStatus(Offer.OfferStatus.REJECTED);
             offer.setUpdatedAt(LocalDateTime.now());
+
+            // ========== WEBSOCKET BROADCAST ==========
+            WebSocketHandler.broadcastOfferStatusChange(
+                    offer.getItemId(),
+                    offerId,
+                    "REJECTED"
+            );
 
             log.info("Offer {} rejected successfully", offerId);
             return offer;
