@@ -24,13 +24,12 @@
 
 ## Features
 
-### Release 1.3.0 (Current)
+### Release 1.4.0 (Current)
 
 #### New in this Release
-- Creating views Mustache to connect with the backend.
-- Creating a js script to communicate with each endpoint.
-- Adding a new WebViewController and WebRoutes to manage the views.
-- Adding some styles with main.css to make the views prettier.
+- **Web Sockets**: Implementing web sockets to have real-time communication between the views and the backend.
+- **Filtering**: Adding price filtering (Max and Min).
+- **Offers status**: Now the offers status updates automatically.
 
 #### Core Features (from v1.2.0)
 - **RESTful API** - Complete CRUD operations for users, items, and offers
@@ -38,6 +37,10 @@
 - **Connection Pooling** - HikariCP for high-performance database connections
 - **Environment Configuration** - Multi-environment support via `.env` files
 - **JSON Serialization** - Gson with custom LocalDateTime and BigDecimal adapters
+- Creating views Mustache to connect with the backend.
+- Creating a js script to communicate with each endpoint.
+- Adding a new WebViewController and WebRoutes to manage the views.
+- Adding some styles with main.css to make the views prettier.
 
 #### Architecture Features
 - **SOLID Principles** - Clean architecture with separation of concerns

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-11-07
+
+### Added
+- **Web Sockets**: Implementing web sockets to have real-time communication between the views and the backend.
+- **Filtering**: Adding price filtering (Max and Min).
+- **Offers status**: Now the offers status updates automatically.
+
+### Notes
+- This version introduces real-time communication using web sockets, now the views updates automatically.
+
 ## [1.3.0] — 2025-11-03
 
 ### Added
