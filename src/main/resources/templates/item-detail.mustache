@@ -17,7 +17,7 @@
     </header>
 
     <main class="item-detail-page">
-        <div class="item-detail-container">
+        <div class="item-detail-container" data-item-id="{{item.id}}">
             <!-- Item Information -->
             <div class="item-info-section">
                 <h2>{{item.name}}</h2>
@@ -108,7 +108,7 @@
             {{#hasOffers}}
                 <div class="offers-list">
                     {{#offers}}
-                        <div class="offer-card status-{{status}}">
+                        <div class="offer-card status-{{status}}" data-offer-id="{{id}}">
                             <div class="offer-header">
                                 <span class="offer-user">{{username}}</span>
                                 <span class="offer-amount">${{offerAmount}}</span>

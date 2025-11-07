@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
     <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/index-page.css">
 </head>
 <body>
 <div class="container">
@@ -16,14 +17,25 @@
             <a href="/users">My Profile</a>
         </nav>
     </header>
-
+    <div class="price-filters" style="text-align: center; margin: 10px">
+        <label style="color: white">
+            Min Price:
+            <input type="number" id="min-price" placeholder="0" />
+        </label>
+        <label style="color: white">
+            Max Price:
+            <input type="number" id="max-price" placeholder="1000" />
+        </label>
+        <button id="apply-filters" style="display: none">Apply</button>
+    </div>
     <main>
         {{#hasItems}}
+
             <div class="items-grid">
                 {{#items}}
-                    <div class="item-card">
+                    <div class="item-card" data-item-id="{{id}}">
                         <div class="item-header">
-                            <h3>{{name}}</h3>
+                            <h3 class="item-name">{{name}}</h3>
                             <div class="price-badges">
                                 <span class="badge badge-original">Original: ${{originalPrice}}</span>
                                 <span class="badge badge-current">Current: ${{currentPrice}}</span>
@@ -67,8 +79,9 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Technoready Collectibles - MELI Sprint 2</p>
+        <p>&copy; 2025 Technoready Collectibles - Sprint 3</p>
     </footer>
 </div>
 </body>
+<script src="/scripts/index-page.js"></script>
 </html>
