@@ -33,10 +33,10 @@ public class UserRoutes {
      */
     public void configure() {
         log.info("Configuring user routes...");
-        before((req, res) -> res.type("application/json"));
-        // Base path for all user routes
-        path("/users", () -> {
 
+        // Base path for all user routes
+        path("api/v1/users", () -> {
+            before((req, res) -> res.type("application/json"));
             // GET /users - Retrieve all users
             get("", userController::getAllUsers);
 
@@ -53,9 +53,10 @@ public class UserRoutes {
 
             // OPTIONS /users/:id - Check if user exists
             options("/:id", userController::checkUserExists);
+            after("/*", (request, response) -> response.type("application/json"));
         });
 
-        after("/*", (request, response) -> response.type("application/json"));
+
 
         log.info("User routes configured successfully");
     }

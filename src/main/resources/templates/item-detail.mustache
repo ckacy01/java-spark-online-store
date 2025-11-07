@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Technoready Collectibles</h1>
+        <nav>
+            <a href="/">← Back to Items</a>
+            <a href="/users">My Profile</a>
+        </nav>
+    </header>
+
+    <main class="item-detail-page">
+        <div class="item-detail-container" data-item-id="{{item.id}}">
+            <!-- Item Information -->
+            <div class="item-info-section">
+                <h2>{{item.name}}</h2>
+                <p class="item-description-full">{{item.description}}</p>
+
+                <div class="price-info-detailed">
+                    <div class="price-box">
+                        <label>Original Price:</label>
+                        <span class="price">${{item.originalPrice}}</span>
+                    </div>
+                    <div class="price-box highlight">
+                        <label>Current Bid:</label>
+                        <span class="price">${{item.currentPrice}}</span>
+                    </div>
+                    <div class="price-box">
+                        <label>Total Offers:</label>
+                        <span class="price">{{item.totalOffers}}</span>
+                    </div>
+                    {{#item.isAvailable}}
+                        <div class="availability available">
+                            <span>✓ Available for bidding</span>
+                        </div>
+                    {{/item.isAvailable}}
+                    {{^item.isAvailable}}
+                        <div class="availability sold">
+                            <span>✗ SOLD</span>
+                        </div>
+                    {{/item.isAvailable}}
+                </div>
+            </div>
+
+            <!-- Make Offer Form -->
+            {{#canMakeOffer}}
+                <div class="offer-form-section">
+                    <h3>Make an Offer</h3>
+                    <form id="offer-form" class="offer-form">
+                        <div class="form-group">
+                            <label for="userId">Select User:</label>
+                            <select id="userId" name="userId" required>
+                                <option value="">-- Choose your profile --</option>
+                                {{#users}}
+                                    <option value="{{id}}">{{username}} ({{fullName}})</option>
+                                {{/users}}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="offerAmount">Your Offer ($):</label>
+                            <input type="number"
+                                   id="offerAmount"
+                                   name="offerAmount"
+                                   step="0.01"
+                                   min="{{item.currentPrice}}"
+                                   placeholder="Must be higher than ${{item.currentPrice}}"
+                                   required>
+                            <small>Minimum bid: ${{item.currentPrice}}</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message (Optional):</label>
+                            <textarea id="message"
+                                      name="message"
+                                      rows="3"
+                                      placeholder="Add a message with your offer..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large">
+                            Submit Offer
+                        </button>
+                    </form>
+
+                    <div id="offer-result" class="offer-result"></div>
+                </div>
+            {{/canMakeOffer}}
+
+            {{^canMakeOffer}}
+                <div class="sold-notice">
+                    <h3>This item has been sold</h3>
+                    <p>No more offers can be placed on this item.</p>
+                </div>
+            {{/canMakeOffer}}
+        </div>
+
+        <!-- Offers List -->
+        <div class="offers-section">
+            <h3>Offers History ({{item.totalOffers}} total)</h3>
+
+            {{#hasOffers}}
+                <div class="offers-list">
+                    {{#offers}}
+                        <div class="offer-card status-{{status}}" data-offer-id="{{id}}">
+                            <div class="offer-header">
+                                <span class="offer-user">{{username}}</span>
+                                <span class="offer-amount">${{offerAmount}}</span>
+                            </div>
+                            <div class="offer-body">
+                                {{#message}}
+                                    <p class="offer-message">💬 {{message}}</p>
+                                {{/message}}
+                                <small class="offer-date">{{createdAt}}</small>
+                            </div>
+                            <div class="offer-footer">
+                            <span class="offer-status status-badge-{{status}}">
+                                {{#isPending}}🟡 PENDING{{/isPending}}
+                                {{#isAccepted}}✅ ACCEPTED{{/isAccepted}}
+                                {{#isRejected}}❌ REJECTED{{/isRejected}}
+                                {{#isOutbid}}⬆️ OUTBID{{/isOutbid}}
+                            </span>
+                            </div>
+                        </div>
+                    {{/offers}}
+                </div>
+            {{/hasOffers}}
+
+            {{^hasOffers}}
+                <div class="empty-state">
+                    <p>No offers yet. Be the first to make an offer!</p>
+                </div>
+            {{/hasOffers}}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Technoready Collectibles</p>
+    </footer>
+</div>
+
+<script src="/scripts/item-detail.js"></script>
+</body>
+</html>

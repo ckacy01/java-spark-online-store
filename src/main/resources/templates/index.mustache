@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/index-page.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Technoready Collectibles</h1>
+        <p>Discover and bid on rare celebrity memorabilia</p>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/users">My Profile</a>
+        </nav>
+    </header>
+    <div class="price-filters" style="text-align: center; margin: 10px">
+        <label style="color: white">
+            Min Price:
+            <input type="number" id="min-price" placeholder="0" />
+        </label>
+        <label style="color: white">
+            Max Price:
+            <input type="number" id="max-price" placeholder="1000" />
+        </label>
+        <button id="apply-filters" style="display: none">Apply</button>
+    </div>
+    <main>
+        {{#hasItems}}
+
+            <div class="items-grid">
+                {{#items}}
+                    <div class="item-card" data-item-id="{{id}}">
+                        <div class="item-header">
+                            <h3 class="item-name">{{name}}</h3>
+                            <div class="price-badges">
+                                <span class="badge badge-original">Original: ${{originalPrice}}</span>
+                                <span class="badge badge-current">Current: ${{currentPrice}}</span>
+                            </div>
+                        </div>
+
+                        <p class="item-description">{{description}}</p>
+
+                        <div class="item-stats">
+                            {{#hasOffers}}
+                                <div class="stat">
+                                    <span class="stat-label">Offers:</span>
+                                    <span class="stat-value">{{totalOffers}}</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Highest:</span>
+                                    <span class="stat-value">${{highestOffer}}</span>
+                                </div>
+                            {{/hasOffers}}
+                            {{^hasOffers}}
+                                <div class="stat no-offers">
+                                    <span>No offers yet - Be the first!</span>
+                                </div>
+                            {{/hasOffers}}
+                        </div>
+
+                        <div class="item-actions">
+                            <a href="/item/{{id}}" class="btn btn-primary">View Details & Bid</a>
+                        </div>
+                    </div>
+                {{/items}}
+            </div>
+        {{/hasItems}}
+
+        {{^hasItems}}
+            <div class="empty-state">
+                <h2>No items available at the moment</h2>
+                <p>Check back later for new collectibles!</p>
+            </div>
+        {{/hasItems}}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Technoready Collectibles - Sprint 3</p>
+    </footer>
+</div>
+</body>
+<script src="/scripts/index-page.js"></script>
+</html>
