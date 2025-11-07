@@ -495,6 +495,8 @@ main {
     color: var(--primary-color);
 }
 
+
+
 .offer-body {
     margin-bottom: 10px;
 }
@@ -836,4 +838,72 @@ footer {
 .user-card,
 .btn {
     will-change: transform;
+}
+
+/* Estilos para las tarjetas de ofertas según su estado */
+.offer-card {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #ccc;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.offer-card.status-pending {
+    border-left-color: #f39c12; /* Amarillo */
+    background-color: #fffbf0;
+}
+
+.offer-card.status-accepted {
+    border-left-color: #27ae60; /* Verde */
+    background-color: #f0fff4;
+}
+
+.offer-card.status-rejected {
+    border-left-color: #e74c3c; /* Rojo */
+    background-color: #fff5f5;
+}
+
+.offer-card.status-outbid {
+    border-left-color: #95a5a6; /* Gris */
+    background-color: #f8f9fa;
+    opacity: 0.7;
+}
+
+/* Badges de status */
+.status-badge-pending {
+    background-color: #f39c12;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.status-badge-accepted {
+    background-color: #27ae60;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.status-badge-rejected {
+    background-color: #e74c3c;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.status-badge-outbid {
+    background-color: #95a5a6;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
 }
