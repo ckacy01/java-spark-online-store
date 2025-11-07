@@ -11,9 +11,12 @@ import org.technoready.exception.ConflictException;
 import org.technoready.exception.NotFoundException;
 import org.technoready.service.ItemService;
 import org.technoready.util.ItemMapper;
+import org.technoready.web.WebSocketHandler;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -55,6 +58,18 @@ public class ItemServiceImpl implements ItemService {
                 .withExtension(ItemDao.class, dao -> dao.insert(item));
         item.setId(generatedId);
 
+        // ==== BROADCAST NEW ITEM TO ALL WATCHERS ====
+        Map<String,  Object> itemData = new HashMap<>();
+        itemData.put("id", item.getId());
+        itemData.put("name", item.getName());
+        itemData.put("description", item.getDescription());
+        itemData.put("price", item.getPrice());
+        itemData.put("available", item.isAvailable());
+        itemData.put("currentPrice", item.getPrice());
+        itemData.put("originalPrice", item.getOriginalPrice());
+
+        WebSocketHandler.brodcastNewItem(item.getId(), itemData);
+
         log.debug("Created item {}", item);
         return item;
     }
@@ -75,6 +90,19 @@ public class ItemServiceImpl implements ItemService {
 
         Item updatedItem = ItemMapper.updateEntity(item, request);
         jdbi.withExtension(ItemDao.class, dao -> dao.update(updatedItem));
+
+        Map<String,  Object> itemData = new HashMap<>();
+        itemData.put("id", item.getId());
+        itemData.put("name", item.getName());
+        itemData.put("description", item.getDescription());
+        itemData.put("price", item.getPrice());
+        itemData.put("available", item.isAvailable());
+        itemData.put("currentPrice", item.getPrice());
+        itemData.put("originalPrice", item.getOriginalPrice());
+        itemData.put("totalOffers", item.getTotalOffers());
+
+        WebSocketHandler.broadcastItemUpdated(item.getId(), itemData);
+
 
         log.info("Updated item {}", updatedItem);
         return updatedItem;
