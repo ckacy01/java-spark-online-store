@@ -30,7 +30,7 @@ function handleWebSocketMessage(msg) {
 
     switch (type) {
         case "CONNECTED":
-            console.log("🔌 Connected to auction feed");
+            console.log("Connected to auction feed");
             break;
 
         case "NEW_ITEMADDED":
@@ -39,7 +39,6 @@ function handleWebSocketMessage(msg) {
             break;
 
         case "ITEM_UPDATED":
-            console.log("🔄 Item updated:", data);
             updateExistingItem(data.itemId, data.item);
             break;
         case "NEW_OFFER":
@@ -61,7 +60,7 @@ function addNewItemToGrid(item) {
         const newGrid = document.createElement('div');
         newGrid.className = 'items-grid';
         main.appendChild(newGrid);
-        return addNewItemToGrid(item); // Llamar recursivamente
+        return addNewItemToGrid(item);
     }
 
     if (!grid) return;
@@ -121,15 +120,13 @@ function updateExistingItem(itemId, itemData) {
     const currentPriceBadge = itemCard.querySelector('.badge-current');
     if (currentPriceBadge && itemData.currentPrice !== undefined) {
         currentPriceBadge.textContent = `Current: ${itemData.currentPrice} (Updated)`;
-        currentPriceBadge.style.backgroundColor = 'red'; // Cambio visible
+        currentPriceBadge.style.backgroundColor = 'red';
         currentPriceBadge.style.animation = 'pulse 0.5s ease';
         setTimeout(() => {
             currentPriceBadge.style.animation = '';
             currentPriceBadge.style.backgroundColor = '';
-            currentPriceBadge.textContent = `Current: ${itemData.currentPrice}`; // Restaurar texto original
+            currentPriceBadge.textContent = `Current: ${itemData.currentPrice}`;
         }, 1000);
-    } else {
-        console.warn("currentPriceBadge not found or currentPrice undefined");
     }
 
     const currentName = itemCard.querySelector('.item-name');
@@ -144,7 +141,6 @@ function updateExistingItem(itemId, itemData) {
     const statsDiv = itemCard.querySelector('.item-stats');
     if (statsDiv) {
         if (itemData.totalOffers > 0 || currentT) {
-            console.log("Updating stats with offers:", itemData.totalOffers);
             statsDiv.innerHTML = `
                 <div class="stat">
                     <span class="stat-label">Offers:</span>
@@ -172,19 +168,14 @@ function updateExistingItem(itemId, itemData) {
                 `;
             }, 1000);
         }
-    } else {
-        console.warn("statsDiv not found");
     }
 
-    // Highlight card
-    console.log("Highlighting card");
     itemCard.style.transition = 'background 0.5s';
     itemCard.style.background = '#222';
     setTimeout(() => itemCard.style.background = '', 500);
 
-    // Forzar re-renderización
     itemCard.style.display = 'none';
-    itemCard.offsetHeight; // Forzar re-render
+    itemCard.offsetHeight;
     itemCard.style.display = '';
 }
 
@@ -253,20 +244,16 @@ function createItemCard(item) {
 
 // ================== Notification System ==================
 function showNotification(message) {
-    // Remover notificación anterior si existe
     const existing = document.querySelector('.toast-notification');
     if (existing) existing.remove();
 
-    // Crear nueva notificación
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.textContent = message;
     document.body.appendChild(toast);
 
-    // Mostrar
     setTimeout(() => toast.classList.add('show'), 100);
 
-    // Ocultar y remover
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 300);
@@ -276,13 +263,9 @@ function showNotification(message) {
 // ================== Initialize ==================
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('/item/')) {
-        console.log("🚫 Item detail page detected, skipping index.js");
         return;
     }
 
-    console.log("🚀 Initializing auction feed...");
-
-    // Agregar data-item-id a las tarjetas existentes
     document.querySelectorAll('.item-card').forEach((card, index) => {
         const link = card.querySelector('a[href^="/item/"]');
         if (link) {
@@ -291,7 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Conectar WebSocket
     initWebSocket();
 
     // ================== Price Filter Event Listeners ==================

@@ -134,32 +134,25 @@ function addOfferToList(offer) {
 
     const offersList = document.querySelector('.offers-list');
 
-    // Si no existe la lista, crear el contenedor
     if (!offersList) {
         const offersSection = document.querySelector('.offers-section');
         if (!offersSection) return;
-
-        // Remover el "empty-state" si existe
         const emptyState = offersSection.querySelector('.empty-state');
         if (emptyState) {
             emptyState.remove();
         }
-
-        // Crear la lista de ofertas
         const newList = document.createElement('div');
         newList.className = 'offers-list';
         offersSection.appendChild(newList);
-        return addOfferToList(offer); // Llamar recursivamente
+        return addOfferToList(offer);
     }
 
-    // Normalizar el status
     const normalizedStatus = (offer.status || 'PENDING').toUpperCase();
 
     const offerCard = document.createElement('div');
     offerCard.className = `offer-card status-${normalizedStatus.toLowerCase()}`;
     offerCard.setAttribute('data-offer-id', offer.id || offer.offerId || '');
 
-    // Formatear la fecha
     const dateStr = offer.createdAt || new Date().toLocaleString();
 
     offerCard.innerHTML = `
@@ -181,9 +174,7 @@ function addOfferToList(offer) {
     offersList.prepend(offerCard);
 }
 
-// Increment total offers count dynamically
 function incrementTotalOffers() {
-    // Actualizar el título de la sección
     const totalEl = document.querySelector('.offers-section h3');
     if (totalEl) {
         const match = totalEl.textContent.match(/\((\d+)/);
@@ -191,12 +182,10 @@ function incrementTotalOffers() {
             const current = parseInt(match[1], 10);
             totalEl.textContent = totalEl.textContent.replace(/\((\d+)/, `(${current + 1}`);
         } else {
-            // Si no hay número, agregarlo
             totalEl.textContent = totalEl.textContent.replace('Offers History', 'Offers History (1 total)');
         }
     }
 
-    // Actualizar el contador en la sección de precios
     const priceBoxes = document.querySelectorAll('.price-box');
     priceBoxes.forEach(box => {
         const label = box.querySelector('label');
@@ -214,24 +203,17 @@ function incrementTotalOffers() {
 function updateOfferStatus(offerId, status) {
     console.log("Updating offer status:", offerId, status);
 
-    // Normalizar el status
     const normalizedStatus = status.toUpperCase();
 
     const target = document.querySelector(`.offer-card[data-offer-id="${offerId}"]`);
     if (target) {
-        // Actualizar la clase del card
         target.className = `offer-card status-${normalizedStatus.toLowerCase()}`;
 
-        // Actualizar el badge de status
         const statusBadge = target.querySelector('.offer-status');
         if (statusBadge) {
             statusBadge.textContent = formatStatusBadge(normalizedStatus);
             statusBadge.className = `offer-status status-badge-${normalizedStatus.toLowerCase()}`;
         }
-
-        console.log(`✅ Updated offer ${offerId} to ${normalizedStatus}`);
-    } else {
-        console.warn(`⚠️ Could not find offer card with id: ${offerId}`);
     }
 }
 
@@ -246,7 +228,6 @@ function formatStatusBadge(status) {
     }
 }
 
-// Helper to map status text (legacy)
 function formatStatus(status) {
     return status.toUpperCase();
 }
@@ -327,16 +308,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fix existing offer cards to have lowercase status classes
     document.querySelectorAll('.offer-card').forEach(card => {
-        // Obtener el status actual de la clase
         const classes = card.className.split(' ');
         const statusClass = classes.find(c => c.startsWith('status-'));
 
         if (statusClass) {
-            // Remover la clase antigua y agregar la nueva en minúsculas
             const status = statusClass.replace('status-', '').toLowerCase();
             card.className = `offer-card status-${status}`;
 
-            // También actualizar el badge
             const badge = card.querySelector('.offer-status');
             if (badge) {
                 badge.className = `offer-status status-badge-${status}`;
